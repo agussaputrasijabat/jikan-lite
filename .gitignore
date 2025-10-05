@@ -1,0 +1,9 @@
+# deps
+node_modules/
+
+# local env files
+.env
+
+# IDE
+.idea/
+.vscode/
