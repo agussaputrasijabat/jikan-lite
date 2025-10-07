@@ -18,12 +18,19 @@ app.get('/:malId', async (c) => {
         let anime = await animeService.findById(malId);
 
         if (anime) {
+            // Add header to indicate data is from cache
+            c.header('X-Data-Source', 'cache');
+
             return c.json({data: anime})
         }
 
         let response = await fetch(`https://api.jikan.moe/v4/anime/${malId}`).then(res => res.json())
         anime = response.data as Anime
         await animeService.create(anime)
+
+        // Add header to indicate data is from API
+        c.header('X-Data-Source', 'api');
+
         return c.json(anime)
     } catch (e) {
         console.error(e)
