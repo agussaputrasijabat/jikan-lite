@@ -1,7 +1,7 @@
 {
   "name": "jikan-lite",
   "scripts": {
-    "dev": "bun run --hot src/index.ts"
+    "dev": "bun run --hot src/index"
   },
   "dependencies": {
     "hono": "^4.9.10"

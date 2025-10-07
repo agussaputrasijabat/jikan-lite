@@ -37,7 +37,8 @@ app.get('/:malId', async (c) => {
         }
 
     } catch (e) {
-        console.error(e)
+        c.status(500)
+        return c.json({error: e})
     }
 
     return c.json({message: 'Anime not found'}, 404)
