@@ -3,6 +3,7 @@ import {RedisCache} from "./cache/redis";
 import MemoryCache from "./cache/memory";
 
 const CACHE_TTL = process.env.CACHE_TTL ? parseInt(process.env.CACHE_TTL) : 3600;
+const CACHE_ENABLED = process.env.CACHE_ENABLED === 'true';
 
 function getCacheStore(): CacheStore {
     if (process.env.CACHE_STORE === 'redis') {
@@ -15,21 +16,37 @@ function getCacheStore(): CacheStore {
 }
 
 export function setCache(key: string, value: string, ttl: number = CACHE_TTL): Promise<void> {
+    if (!CACHE_ENABLED) {
+        return Promise.resolve();
+    }
+
     const store = getCacheStore();
     return store.set(key, value, ttl);
 }
 
 export function getCache(key: string): Promise<string | null> {
+    if (!CACHE_ENABLED) {
+        return Promise.resolve(null);
+    }
+
     const store = getCacheStore();
     return store.get(key);
 }
 
 export function deleteCache(key: string): Promise<void> {
+    if (!CACHE_ENABLED) {
+        return Promise.resolve();
+    }
+
     const store = getCacheStore();
     return store.delete(key);
 }
 
 export function clearCache(): Promise<void> {
+    if (!CACHE_ENABLED) {
+        return Promise.resolve();
+    }
+
     const store = getCacheStore();
     return store.clear();
 }
