@@ -1,8 +1,13 @@
 import {Hono} from "hono";
 import animeV4 from "./api/v4/controllers/anime"
 import mangaV4 from "./api/v4/controllers/manga"
+import {Schema} from "./api/v4/database/schema";
 
 const app = new Hono()
+
+const schema = new Schema()
+schema.bootstrap()
+
 
 app.get('/', (c) => {
     return c.json({

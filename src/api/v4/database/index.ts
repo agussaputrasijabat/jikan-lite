@@ -1,11 +1,11 @@
-import { SQL } from "bun";
+import { Database } from "bun:sqlite";
 
-let db: SQL | null = null;
+let db: Database | null = null;
 
-export function getDatabase(): SQL {
+export function getDatabase(): Database {
     if (db) return db;
 
-    let dbFilename = process.env.DB_FILENAME || 'jikan-db.sqlite3';
-    db = new SQL(dbFilename, { adapter: "sqlite" });
-    return db
+    let dbFilename = process.env.DB_FILENAME || 'database.sqlite';
+    db = new Database(dbFilename);
+    return db!!;
 }
