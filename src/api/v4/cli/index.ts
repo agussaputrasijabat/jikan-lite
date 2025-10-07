@@ -20,6 +20,7 @@ function printHelp() {
   console.log("Options (sync:anime):");
   console.log("  --limit <n>             Limit number of IDs to process");
   console.log("  --from-index <n>        Start from ID index in the list");
+  console.log("  --resume                Resume from last processed index (default: false)");
   console.log("  --force-update          Update even if record already exists");
 }
 

@@ -19,6 +19,7 @@ Examples:
 - `bun run src/cli sync:anime --limit 100` (first 100 IDs)
 - `bun run src/cli sync:anime --from-index 500 --limit 200` (IDs 500..699)
 - `bun run src/cli sync:anime --force-update` (update even if already exists)
+- `bun run src/cli sync:anime --resume` (resume from last processed index)
 
 Notes:
 - The CLI enforces a 1-second delay between each ID to respect rate limits.
