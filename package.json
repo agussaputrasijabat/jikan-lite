@@ -1,7 +1,9 @@
 {
   "name": "jikan-lite",
   "scripts": {
-    "dev": "bun run --hot src/index"
+    "dev": "bun run --hot src/index",
+    "cli": "bun run src/cli",
+    "sync:anime": "bun run src/cli sync:anime"
   },
   "dependencies": {
     "hono": "^4.9.10"
