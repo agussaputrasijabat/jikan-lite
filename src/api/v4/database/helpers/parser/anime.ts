@@ -3,13 +3,33 @@ import {nullableString, parseJSON, parseTitles, toBool, toNullableNumber, toNumb
 
 declare global {
     interface Object {
+        /**
+         * Converts a plain database row object to a strongly-typed Anime entity.
+         * @returns {Anime}
+         */
         toAnime(): Anime;
+
+        /**
+         * Produces an INSERT SQL statement and parameters for persisting an Anime.
+         * @returns {SqlTuple}
+         */
         toAnimeInsertSQL(): SqlTuple;
+
+        /**
+         * Produces an UPDATE SQL statement (by [mal_id]) and parameters for an Anime.
+         * @returns {SqlTuple}
+         */
         toAnimeUpdateSQL(): SqlTuple;
     }
 }
 
 // non-enumerable to avoid polluting object keys
+/**
+ * Converts the current object (assumed DB row) into an Anime object by mapping and parsing fields.
+ *
+ * @this any
+ * @returns {Anime} Mapped Anime entity.
+ */
 Object.defineProperty(Object.prototype, "toAnime", {
     value: function toAnime(this: any): Anime {
         const row: any = this;
@@ -103,13 +123,42 @@ Object.defineProperty(Object.prototype, "toAnime", {
     enumerable: false,
 });
 
+/**
+ * A small helper tuple containing a SQL statement and its parameter values.
+ */
 type SqlTuple = { sql: string; params: any[] };
 
+/**
+ * JSON-stringifies non-null/undefined values; returns null otherwise.
+ * @param {unknown} v - Value to serialize.
+ * @returns {string | null}
+ */
 const j = (v: unknown) => (v === undefined ? null : v === null ? null : JSON.stringify(v));
+
+/**
+ * Normalizes a possibly undefined/null string to null.
+ * @param {string | null | undefined} v
+ * @returns {string | null}
+ */
 const s = (v?: string | null) => (v ?? null);
+
+/**
+ * Normalizes a possibly undefined/null number to null.
+ * @param {number | null | undefined} v
+ * @returns {number | null}
+ */
 const n = (v?: number | null) => (v ?? null);
+
+/**
+ * Converts a boolean-ish value to 1/0 (SQLite friendly); null/undefined become 0.
+ * @param {boolean | null | undefined} v
+ * @returns {0 | 1}
+ */
 const b = (v?: boolean | null) => (v ? 1 : 0);
 
+/**
+ * Column names used for building SQL statements for the anime table.
+ */
 const ANIME_COLUMNS = [
     "[mal_id]",
     "[url]",
@@ -172,6 +221,11 @@ const ANIME_COLUMNS = [
     "[demographics]",
 ] as const;
 
+/**
+ * Produces the parameter values (aligned with ANIME_COLUMNS) for an Anime entity.
+ * @param {Anime} a - The Anime entity.
+ * @returns {any[]} Ordered values to be used with prepared SQL statements.
+ */
 function animeValues(a: Anime): any[] {
     return [
         n(a.mal_id),
@@ -237,14 +291,20 @@ function animeValues(a: Anime): any[] {
 }
 
 // INSERT builder
+/**
+ * Builds an INSERT statement and parameters for the current Anime object.
+ * @this Anime
+ * @returns {SqlTuple} Tuple of SQL and params for INSERT.
+ */
 Object.defineProperty(Object.prototype, "toAnimeInsertSQL", {
     value: function toAnimeInsertSQL(this: any): SqlTuple {
         const a = this as Anime;
         const cols = ANIME_COLUMNS.join(", ");
         const placeholders = ANIME_COLUMNS.map(() => "?").join(", ");
-        const sql = `INSERT INTO [anime] (${cols}) VALUES (${placeholders});`;
+        const sql = `INSERT INTO [anime] (${cols})
+                     VALUES (${placeholders});`;
         const params = animeValues(a);
-        return { sql, params };
+        return {sql, params};
     },
     writable: false,
     configurable: true,
@@ -252,6 +312,11 @@ Object.defineProperty(Object.prototype, "toAnimeInsertSQL", {
 });
 
 // UPDATE builder (by primary key [mal_id])
+/**
+ * Builds an UPDATE statement (by [mal_id]) and parameters for the current Anime object.
+ * @this Anime
+ * @returns {SqlTuple} Tuple of SQL and params for UPDATE.
+ */
 Object.defineProperty(Object.prototype, "toAnimeUpdateSQL", {
     value: function toAnimeUpdateSQL(this: any): SqlTuple {
         const a = this as Anime;
@@ -259,8 +324,10 @@ Object.defineProperty(Object.prototype, "toAnimeUpdateSQL", {
         const malIdIdx = ANIME_COLUMNS.indexOf("[mal_id]");
         const setPairs = ANIME_COLUMNS.filter((c) => c !== "[mal_id]").map((c) => `${c} = ?`).join(", ");
         const params = allValues.filter((_, i) => i !== malIdIdx).concat([a.mal_id]);
-        const sql = `UPDATE [anime] SET ${setPairs} WHERE [mal_id] = ?;`;
-        return { sql, params };
+        const sql = `UPDATE [anime]
+                     SET ${setPairs}
+                     WHERE [mal_id] = ?;`;
+        return {sql, params};
     },
     writable: false,
     configurable: true,

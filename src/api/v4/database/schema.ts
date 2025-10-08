@@ -1,10 +1,24 @@
 import {getDatabase} from "./index";
 
+/**
+ * Handles bootstrapping and managing the database schema for the application.
+ *
+ * Provides methods that execute CREATE TABLE statements against the SQLite database.
+ */
 export class Schema {
-    bootstrap() {
+    /**
+     * Bootstraps the database schema by creating required tables.
+     * Safe to call multiple times; uses IF NOT EXISTS.
+     * @returns {void}
+     */
+    bootstrap(): void {
         this.createAnimeTable()
     }
 
+    /**
+     * Creates the anime table if it does not already exist.
+     * @private
+     */
     private createAnimeTable() {
         let db = getDatabase()
 

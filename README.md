@@ -6,6 +6,16 @@
 
 - Start API server: `bun run dev`
 
+## Documentation
+
+This project uses TypeDoc to generate documentation for all exported functions and classes.
+
+- Generate docs: `bun run docs`
+- Output directory: `./docs`
+- Configuration: `typedoc.json`
+
+Note: Ensure dev dependencies are installed (run `bun install`) before generating docs.
+
 ## CLI (v4)
 
 Sync anime data from Jikan v4 to the local DB using MAL IDs from the cache list.

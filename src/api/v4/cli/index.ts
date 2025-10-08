@@ -10,6 +10,13 @@ const commands: Record<string, CommandHandler> = {
   // Future-ready placeholders: sync:manga, sync:characters, etc.
 };
 
+/**
+ * Prints CLI usage information and available commands to stdout.
+ *
+ * Writes formatted usage and options text to the console.
+ *
+ * @returns {void}
+ */
 function printHelp() {
   console.log("Jikan Lite CLI (v4)");
   console.log("Usage:");
@@ -24,6 +31,12 @@ function printHelp() {
   console.log("  --force-update          Update even if record already exists");
 }
 
+/**
+ * Entry point for the v4 CLI.
+ * Parses arguments, initializes DB schema, dispatches to command handlers, and returns an exit code.
+ * @param {string[]} args - CLI arguments (excluding the node/bun and script path).
+ * @returns {Promise<number>} Exit code (0 = success, non-zero = error).
+ */
 export async function runV4Cli(args: string[]): Promise<number> {
   const [cmd, ...rest] = args;
 

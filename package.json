@@ -6,12 +6,14 @@
   "scripts": {
     "dev": "bun run --hot src/index",
     "cli": "bun run src/cli",
-    "sync:anime": "bun run src/cli sync:anime"
+    "sync:anime": "bun run src/cli sync:anime",
+    "docs": "typedoc"
   },
   "dependencies": {
     "hono": "^4.9.10"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "typedoc": "^0.27.7"
   }
 }

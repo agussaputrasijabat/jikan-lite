@@ -1,5 +1,14 @@
 import {QueryOptions} from "../database/types/repository";
 
+/**
+ * Serializes QueryOptions into a URL query string fragment.
+ * Only defined values are included, and filter values are URL-encoded.
+ *
+ * Iterates top-level options and filter entries, appending encoded key/value pairs to a string prefixed with '&'.
+ *
+ * @param {QueryOptions} query - The query options to serialize.
+ * @returns {string} A query string starting with "&" for each parameter.
+ */
 export function QueryToString(query: QueryOptions): string {
     let queryString = '';
 
@@ -15,7 +24,6 @@ export function QueryToString(query: QueryOptions): string {
             }
         }
     }
-
 
     return queryString;
 }
