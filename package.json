@@ -1,5 +1,8 @@
 {
   "name": "jikan-lite",
+  "author": {
+    "name": "Agus Saputra Sijabat"
+  },
   "scripts": {
     "dev": "bun run --hot src/index",
     "cli": "bun run src/cli",
