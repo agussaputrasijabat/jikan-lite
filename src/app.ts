@@ -3,6 +3,8 @@ import {logger} from 'hono/logger'
 import animeV4 from "./api/v4/controllers/anime"
 import mangaV4 from "./api/v4/controllers/manga"
 import {Schema} from "./api/v4/database/schema";
+import {getDatabase} from "./api/v4/database";
+import {AnimeRepository} from "./api/v4/database/repository/anime-repository";
 
 const app = new Hono()
 
@@ -40,13 +42,21 @@ app.use(logger(customLogger))
  * @route GET /
  * @returns {Promise<Response>} JSON containing welcome message, version, and endpoints.
  */
-app.get('/', (c) => {
+app.get('/', async (c) => {
+    let db = getDatabase()
+    let animeRepository = new AnimeRepository(db);
+    let totalAnime = await animeRepository.countAll();
+
     return c.json({
         message: 'Welcome to the Jikan Lite API!',
         version: 'v4',
         endpoints: {
             anime: '/v4/anime',
             manga: '/v4/manga'
+        },
+        count: {
+            anime: totalAnime,
+            manga: 'TBD'
         },
         documentation: 'Generate locally with `bun run docs` (see README). Output in /docs',
         author: 'Agus Saputra Sijabat',
@@ -55,6 +65,7 @@ app.get('/', (c) => {
 })
 
 // API v4
+app.get('/v4', (c) => c.redirect('/'))
 app.route('/v4/anime', animeV4)
 app.route('/v4/manga', mangaV4)
 

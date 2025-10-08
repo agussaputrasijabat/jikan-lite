@@ -59,6 +59,11 @@ export function getColumn(tableName: string, columnName: string, db: Database): 
     return column || null;
 }
 
+export function getColumns(tableName: string, db: Database): Record<string, any>[] {
+    const stmt = db.prepare(`PRAGMA table_info(${tableName})`);
+    return stmt.all() as Record<string, any>[];
+}
+
 /**
  * Drops a column from a specified table in the database.
  *

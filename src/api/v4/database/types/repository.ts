@@ -1,10 +1,12 @@
 export interface Repository<T> {
-    findById(id: number): T | null;
-    findAll(): T[];
-    findByQuery(options: QueryOptions): T[];
-    create(item: T): T;
-    update(id: number, item: Partial<T>): T | null;
-    delete(id: number): boolean;
+    findById(id: number): Promise<T | null>;
+    findAll(): Promise<T[]>;
+    findByQuery(options: QueryOptions): Promise<T[]>;
+    countByQuery(options: QueryOptions): Promise<number>;
+    countAll(): Promise<number>;
+    create(item: T): Promise<T>;
+    update(id: number, item: Partial<T>): Promise<T | null>;
+    delete(id: number): Promise<boolean>;
 }
 
 
@@ -13,11 +15,8 @@ export type QueryOptions = {
     limit?: number;
     orderBy?: string;
     orderDirection?: 'ASC' | 'DESC';
+    search?: string;
     filters: {
-        search?: string;
-        status?: string;
-
-        // Add more filters as needed
         [key: string]: any;
     }
 }

@@ -80,7 +80,7 @@ export default class AnimeService implements ItemService<Anime> {
             return JSON.parse(animeCache) as Anime[]
         }
 
-        let animeList = this.repository.findByQuery(options);
+        let animeList = await this.repository.findByQuery(options);
         if (animeList.length > 0) {
             await setCache(cacheKey, JSON.stringify(animeList));
             return animeList;
@@ -98,7 +98,7 @@ export default class AnimeService implements ItemService<Anime> {
      * @returns {Promise<Anime>} The created Anime.
      */
     async create(item: Anime): Promise<Anime> {
-        let createdAnime = this.repository.create(item);
+        let createdAnime = await this.repository.create(item);
 
         // Store in cache for future requests
         await setCache(`anime_${createdAnime.mal_id}`, JSON.stringify(createdAnime));
@@ -137,5 +137,4 @@ export default class AnimeService implements ItemService<Anime> {
         await deleteCache(`anime_${id}`);
         return Promise.resolve(this.repository.delete(id));
     }
-
 }

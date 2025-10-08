@@ -4,6 +4,7 @@ import '../database/helpers/parser/anime';
 import {AnimeRepository} from "../database/repository/anime-repository";
 import {getDatabase} from "../database";
 import AnimeService from "../services/anime-service";
+import {ObjectToQuery} from "../database/helpers/object-to-query";
 
 /**
  * Router for Anime endpoints (v4).
@@ -18,7 +19,21 @@ const app = new Hono()
  * @route GET /v4/anime/
  * @returns {string} Plain text hello response.
  */
-app.get('/', (c) => c.text('Hello anime!'))
+app.get('/', async (c) => {
+    try {
+        let db = getDatabase();
+        const animeRepository = new AnimeRepository(db)
+        const animeService = new AnimeService(animeRepository);
+
+        let queryOptions = ObjectToQuery(c.req.query()); // Convert query params to QueryOptions
+        let lists = await animeService.findByQuery(queryOptions);
+
+        return c.json({data: lists});
+    } catch (e) {
+        c.status(500)
+        return c.json({error: e})
+    }
+})
 
 /**
  * Retrieves anime by MAL ID. First checks local DB/cache, otherwise fetches from Jikan API.
