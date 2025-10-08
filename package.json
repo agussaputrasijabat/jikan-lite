@@ -5,6 +5,7 @@
   },
   "scripts": {
     "dev": "bun run --hot src/index",
+    "build": "bun build --target=bun --sourcemap --minify src/index.ts src/cli.ts --outdir=dist",
     "cli": "bun run src/cli",
     "sync:anime": "bun run src/cli sync:anime",
     "docs": "typedoc"
