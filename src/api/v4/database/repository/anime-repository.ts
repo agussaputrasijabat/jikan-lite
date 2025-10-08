@@ -116,16 +116,8 @@ import {Database} from "bun:sqlite";
           */
          async findByQuery(options: QueryOptions): Promise<Anime[]> {
              let query = await QueryToSQL(options, "anime");
-             // console.log(query.sql, query.params);
              const stmt = this.db.prepare(query.sql);
              const result: any = stmt.all(...query.params);
-
-             let rawSql = query.sql;
-             for (let param of query.params) {
-                    rawSql = rawSql.replace("?", typeof param === "string" ? `'${param}'` : param);
-             }
-
-             console.log(rawSql);
 
              if (result.count === 0) {
                  return [];
